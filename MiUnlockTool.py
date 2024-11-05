@@ -35,7 +35,10 @@ cres = Style.RESET_ALL
 cy = Style.BRIGHT + Fore.YELLOW
 p_ = cg + "\n" + "_"*56 +"\n"
 session = requests.Session()
-headers = {"User-Agent": "XiaomiPCSuite"}
+headers = {
+    "User-Agent": "XiaomiPCSuite",
+    "Accept": "application/json"
+}
 
 if '1' in sys.argv:
     pass
@@ -294,7 +297,7 @@ print(f"\n{cg}DeviceInfo:{cres}\nunlocked: {unlocked}\nSoC: {SoC}\nproduct: {pro
 
 class RetrieveEncryptData:
     def add_nonce(self):
-        r = RetrieveEncryptData("/api/v2/nonce", {"r":''.join(random.choices(list("abcdefghijklmnopqrstuvwxyz"), k=16)), "sid":"miui_unlocktool_client"}).run()
+        r = RetrieveEncryptData("/api/v2/nonce", {"r":''.join(random.choices(list("abcdefghijklmnopqrstuvwxyz"), k=32)), "sid":"miui_unlocktool_client"}).run()
         self.params[b"nonce"] = r["nonce"].encode("utf-8")
         self.params[b"sid"] = b"miui_unlocktool_client"
         return self
