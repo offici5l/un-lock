@@ -324,7 +324,21 @@ class RetrieveEncryptData:
             return json_data
         except Exception as e:
             print("\n\nError:", e)
+            if 'response_text' in locals():
+                print(f"\n\nresponse_text:\n\n{response_text}\n\n")
+            if 'decoded_data' in locals():
+                print(f"\n\ndecoded_data:\n\n{decoded_data}\n\n")
+            if 'decrypted_data' in locals():
+                print(f"\n\ndecrypted_data:\n\n{decrypted_data}\n\n")
+            if 'unpadded_data' in locals():
+                print(f"\n\nunpadded_data:\n\n{unpadded_data}\n\n")
+            if 'decoded_unpadded_data' in locals():
+                print(f"\n\ndecoded_unpadded_data:\n\n{decoded_unpadded_data}\n\n")
+            if 'json_data' in locals():
+                print(f"\n\njson_data:\n\n{json_data}\n\n")
+            
             exit()
+
 
 print(p_)
 
