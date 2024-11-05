@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-version = "1.5.7"
+version = "test"
 
 import os
 
@@ -37,27 +37,10 @@ p_ = cg + "\n" + "_"*56 +"\n"
 session = requests.Session()
 headers = {"User-Agent": "XiaomiPCSuite"}
 
-def check_for_update():
-    try:
-        response = requests.get("https://raw.githubusercontent.com/offici5l/MiUnlockTool/main/MiUnlockTool.py", timeout=3)
-        response.raise_for_status()
-        match = re.search(r'version\s*=\s*[\'"]([^\'"]+)[\'"]', response.text)
-        if match:
-            cloud_version = match.group(1)
-            if version < cloud_version:
-                print(f"\nNew version {cloud_version} is available")
-                with open(__file__, "w", encoding="utf-8") as f:
-                    f.write(response.text)
-                    print(f"\n{cg}Updated successfully{cres}")
-                os.execv(sys.executable)
-    except Exception as e:
-        pass
-
 if '1' in sys.argv:
     pass
 else:
     print(cgg + f"\n[V{version}] For issues or feedback:\n- GitHub: github.com/offici5l/MiUnlockTool/issues\n- Telegram: t.me/Offici5l_Group\n" + cres)
-    check_for_update()
 
 print(p_)
 
