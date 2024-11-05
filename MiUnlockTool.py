@@ -310,19 +310,18 @@ class RetrieveEncryptData:
         self.params[b"signature"] = b64encode(hashlib.sha1(self.getp(b"&")+b"&"+ssecurity.encode("utf-8")).digest())
         try:
             response_text = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies).text
-            print(f"\n\nresponse_text:\n\n{response_text}\n\n")
             decoded_data = b64decode(response_text)
-            print(f"\n\ndecoded_data:\n\n{decoded_data}\n\n")
             decrypted_data = AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").decrypt(decoded_data)
-            print(f"\n\ndecrypted_data:\n\n{decrypted_data}\n\n")
             unpadded_data = (lambda s: s[:-s[-1]] if s and s[-1] > 0 else s)(decrypted_data)
-            print(f"\n\nunpadded_data:\n\n{unpadded_data}\n\n")
             decoded_unpadded_data = b64decode(unpadded_data)
-            print(f"\n\ndecoded_unpadded_data:\n\n{decoded_unpadded_data}\n\n")
             json_data = json.loads(decoded_unpadded_data)
-            print(f"\n\njson_data:\n\n{json_data}\n\n")
             return json_data
         except Exception as e:
+            print("\n\nData sent:\n")
+            print(f"URL: {Url(scheme='https', host=url, path=self.path).url}")
+            print(f"Params: {self.params}")
+            print(f"Headers: {headers}")
+            print(f"Cookies: {cookies}")
             print("\n\nError:", e)
             if 'response_text' in locals():
                 print(f"\n\nresponse_text:\n\n{response_text}\n\n")
@@ -336,9 +335,8 @@ class RetrieveEncryptData:
                 print(f"\n\ndecoded_unpadded_data:\n\n{decoded_unpadded_data}\n\n")
             if 'json_data' in locals():
                 print(f"\n\njson_data:\n\n{json_data}\n\n")
-            
+           
             exit()
-
 
 print(p_)
 
