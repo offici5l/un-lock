@@ -35,10 +35,7 @@ cres = Style.RESET_ALL
 cy = Style.BRIGHT + Fore.YELLOW
 p_ = cg + "\n" + "_"*56 +"\n"
 session = requests.Session()
-headers = {
-    "User-Agent": "XiaomiPCSuite",
-    "Accept": "application/json"
-}
+headers = {"User-Agent": "XiaomiPCSuite"}
 
 if '1' in sys.argv:
     pass
@@ -297,7 +294,7 @@ print(f"\n{cg}DeviceInfo:{cres}\nunlocked: {unlocked}\nSoC: {SoC}\nproduct: {pro
 
 class RetrieveEncryptData:
     def add_nonce(self):
-        r = RetrieveEncryptData("/api/v2/nonce", {"r":''.join(random.choices(list("abcdefghijklmnopqrstuvwxyz"), k=32)), "sid":"miui_unlocktool_client"}).run()
+        r = RetrieveEncryptData("/api/v2/nonce", {"r":''.join(random.choices(list("abcdefghijklmnopqrstuvwxyz"), k=16)), "sid":"miui_unlocktool_client"}).run()
         self.params[b"nonce"] = r["nonce"].encode("utf-8")
         self.params[b"sid"] = b"miui_unlocktool_client"
         return self
@@ -312,16 +309,21 @@ class RetrieveEncryptData:
             self.params[k] = b64encode(AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").encrypt(v + (16 - len(v) % 16) * bytes([16 - len(v) % 16])))
         self.params[b"signature"] = b64encode(hashlib.sha1(self.getp(b"&")+b"&"+ssecurity.encode("utf-8")).digest())
         try:
-            print("URL:", Url(scheme="https", host=url, path=self.path).url)
             response_text = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies).text
+            print(f"\n\nresponse_text:\n\n{response_text}\n\n")
             decoded_data = b64decode(response_text)
+            print(f"\n\ndecoded_data:\n\n{decoded_data}\n\n")
             decrypted_data = AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").decrypt(decoded_data)
-            return json.loads(b64decode((lambda s: s[:-s[-1]])(decrypted_data)))
+            print(f"\n\ndecrypted_data:\n\n{decrypted_data}\n\n")
+            unpadded_data = (lambda s: s[:-s[-1]] if s and s[-1] > 0 else s)(decrypted_data)
+            print(f"\n\nunpadded_data:\n\n{unpadded_data}\n\n")
+            decoded_unpadded_data = b64decode(unpadded_data)
+            print(f"\n\ndecoded_unpadded_data:\n\n{decoded_unpadded_data}\n\n")
+            json_data = json.loads(decoded_unpadded_data)
+            print(f"\n\njson_data:\n\n{json_data}\n\n")
+            return json_data
         except Exception as e:
             print("\n\nError:", e)
-            print("\n\nResponse Text:", response_text)
-            print("\n\nDecoded Data:", decoded_data)
-            print("\n\nDecrypted Data:", decrypted_data)
             exit()
 
 print(p_)
