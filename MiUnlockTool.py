@@ -309,7 +309,8 @@ class RetrieveEncryptData:
             self.params[k] = b64encode(AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").encrypt(v + (16 - len(v) % 16) * bytes([16 - len(v) % 16])))
         self.params[b"signature"] = b64encode(hashlib.sha1(self.getp(b"&")+b"&"+ssecurity.encode("utf-8")).digest())
         try:
-            response_text = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies).text
+            response = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies).text
+            response_text = response.text
             decoded_data = b64decode(response_text)
             decrypted_data = AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").decrypt(decoded_data)
             unpadded_data = (lambda s: s[:-s[-1]] if s and s[-1] > 0 else s)(decrypted_data)
@@ -317,11 +318,7 @@ class RetrieveEncryptData:
             json_data = json.loads(decoded_unpadded_data)
             return json_data
         except Exception as e:
-            print("\n\nData sent:\n")
-            print(f"URL: {Url(scheme='https', host=url, path=self.path).url}")
-            print(f"Params: {self.params}")
-            print(f"Headers: {headers}")
-            print(f"Cookies: {cookies}")
+            print(f"\nData sent with the request: {response.request.body.decode('utf-8')}")
             print("\n\nError:", e)
             if 'response_text' in locals():
                 print(f"\n\nresponse_text:\n\n{response_text}\n\n")
