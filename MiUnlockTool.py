@@ -309,7 +309,7 @@ class RetrieveEncryptData:
             self.params[k] = b64encode(AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").encrypt(v + (16 - len(v) % 16) * bytes([16 - len(v) % 16])))
         self.params[b"signature"] = b64encode(hashlib.sha1(self.getp(b"&")+b"&"+ssecurity.encode("utf-8")).digest())
         try:
-            response = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies).text
+            response = session.post(Url(scheme="https", host=url, path=self.path).url, data=self.params, headers=headers, cookies=cookies)
             response_text = response.text
             decoded_data = b64decode(response_text)
             decrypted_data = AES.new(b64decode(ssecurity), AES.MODE_CBC, b"0102030405060708").decrypt(decoded_data)
