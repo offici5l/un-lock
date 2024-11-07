@@ -372,7 +372,7 @@ if "code" in r and r["code"] == 0:
 elif "descEN" in r:
     print(f"\ncode {r['code']}\n\n{r['descEN']}")
     if r["code"] == 20036:
-        print("\nYou can unlock on:", (datetime.datetime.now().replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=r["data"]["waitHour"])).strftime("%Y-%m-%d %H:%M"))
+        print("\nYou can unlock on:", (datetime.datetime.now() + datetime.timedelta(hours=r["data"]["waitHour"])).strftime("%Y-%m-%d %H:%M"))
     else:
         print(f"{cgg}\noffici5l.github.io/code\n{cres}")
 else:
