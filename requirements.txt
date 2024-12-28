@@ -1,0 +1,4 @@
+pycryptodomex
+urllib3
+requests
+colorama
