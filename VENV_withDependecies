@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Set the virtual environment directory
+VENV_DIR="venv"
+
+# Create a virtual environment
+python3 -m venv $VENV_DIR
+
+# Activate the virtual environment
+source $VENV_DIR/bin/activate
+
+# Install the required libraries
+pip install pycryptodomex urllib3 requests colorama
+
+echo "Virtual environment setup complete and all requirements installed."
